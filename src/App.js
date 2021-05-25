@@ -35,6 +35,9 @@ class App extends Component {
 
       this.setState({ sameWords: [...sameWords] });
     }
+    else {
+      this.setState({sameWords:[]})
+    }
   };
   count = () => {
     const { text } = this.state;
