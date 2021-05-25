@@ -16,25 +16,26 @@ class App extends Component {
   findSameWord=()=>{
     const {text} = this.state;
     if(text!==""){
-      let tempArr = text.match(/\S+/gi);
-       let sameWords = [];
-       let count = 1;
+      let tempArr = text.replace(/^\s+|\s+$/g,'')
+      .split(/\s+/);
+      let sameWords=[];
       for (let i = 0; i < tempArr.length; i++)
-       {
-          if (tempArr[i] === tempArr[i + 1]) 
+      {  
+        let count = 0;
+        for(let j=0;j<tempArr.length;j++){
+          if (tempArr[i] === tempArr[j]) 
           { 
-            count++;
+            count++;    
       }
-       else {
-      if (count >1)
+    }
+       if(count>1)
       {
-        sameWords = [...sameWords, {word:tempArr[i],count:count}];
-        count = 1;
-      } 
-    }}
-      this.setState({sameWords:sameWords})
-  } 
-  }
+        const index=sameWords.findIndex((word)=>word.word===tempArr[i]);
+         index===-1? sameWords.push({word:tempArr[i],count:count}): sameWords[index].count=count;
+      }
+    } 
+   this.setState({sameWords:[...sameWords]})
+  }}
   count=()=>{
     const {text}=this.state;
     const words = text !==""?text.match(/\S+/gi).length:0;
@@ -51,6 +52,7 @@ class App extends Component {
     <div>
       <h1>Word Counter</h1>
       <textarea
+
         value={text}
         onChange={(e)=>{this.setState({text:e.target.value},()=>this.count())
         }}
@@ -59,7 +61,7 @@ class App extends Component {
       <h2>Semi vowels {this.state.semiVowels}</h2>
       <h2>Consonant {this.state.consonant}</h2>
       <h2>Words {this.state.words}</h2>
-      <h2>Same words {this.state.sameWords.map(word=>{return <h2>{word.word} {word.count}</h2>})}</h2>
+      <h2>Same words {this.state.sameWords.map((word,index)=>{return <p key={index}>{word.word} {word.count}</p>})}</h2>
     </div>
   );
 }}
